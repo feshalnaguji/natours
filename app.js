@@ -21,6 +21,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// Get All Tour
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -31,6 +32,27 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const tour = tours.find((tour) => tour.id === id);
+
+  //   if (id > tours.length) {
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
+// Create New Tour
 app.post('/api/v1/tours', (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;

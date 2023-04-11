@@ -32,6 +32,7 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+// Get one tour
 app.get('/api/v1/tours/:id', (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((tour) => tour.id === id);
@@ -71,6 +72,38 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
+});
+
+// Update Tour
+app.patch('/api/v1/tours/:id', (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: 'updated tour here...',
+    },
+  });
+});
+
+// Delete Tour
+app.delete('/api/v1/tours/:id', (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
 });
 
 // start a server

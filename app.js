@@ -9,6 +9,7 @@ const app = express();
 // middlewares
 app.use(morgan('dev')); // for getting request data in log
 app.use(express.json()); // bodyParser
+app.use(express.static(`${__dirname}/public`)); // accessing static files like html css images etc.
 
 // custom middlewares
 app.use((req, res, next) => {
@@ -20,17 +21,6 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-
-// // Get All Tour
-// app.get('/api/v1/tours', getAllTours);
-// // Get one tour
-// app.get('/api/v1/tours/:id', getTour);
-// // Create New Tour
-// app.post('/api/v1/tours', createTour);
-// // Update Tour
-// app.patch('/api/v1/tours/:id', updateTour);
-// // Delete Tour
-// app.delete('/api/v1/tours/:id', deleteTour);
 
 // Routes
 

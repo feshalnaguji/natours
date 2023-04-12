@@ -7,7 +7,10 @@ const userRouter = require('./routes/userRoutes.js');
 const app = express();
 
 // middlewares
-app.use(morgan('dev')); // for getting request data in log
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev')); // for getting request data in log
+}
+
 app.use(express.json()); // bodyParser
 app.use(express.static(`${__dirname}/public`)); // accessing static files like html css images etc.
 

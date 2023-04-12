@@ -31,25 +31,33 @@ const Tour = require('./../models/tourModel.js');
 exports.getAllTours = async (req, res) => {
   try {
     // BUILD THE QUERY
-    // 1) Filtering
+    // 1A) Filtering
     // console.log(req.query);
     const queryObj = { ...req.query }; // creating a shallow copy of req.query object
     const excludeFields = ['page', 'sort', 'limit', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
-    // 2) Advanced filtering
+    // 2B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     // console.log(JSON.parse(queryStr));
 
     // const tours = await Tour.find(); // returns a document and also converts it to JS object
-    const query = Tour.find(JSON.parse(queryStr)); // passing filter object inside find
+    let query = Tour.find(JSON.parse(queryStr)); // passing filter object inside find
 
     // const query = await Tour.find()
     //   .where('duration')
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
+
+    // 2) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
 
     // EXECUTE THE QUERY
     const tours = await query;

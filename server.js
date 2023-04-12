@@ -24,7 +24,7 @@ mongoose
   });
 
 // start a server
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   // callback function is called as soon as server starts listening
   console.log(`App running or port ${port}...`);

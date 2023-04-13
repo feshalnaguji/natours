@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 
 // Routes
 
-app.use('/api/v1/tours', tourRouter); // mounting a router
+app.use('/api/v1/tours', tourRouter); // creating sub routers
 app.use('/api/v1/users', userRouter);
 
 // start a server

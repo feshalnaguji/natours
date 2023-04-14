@@ -89,4 +89,6 @@ exports.updateUser = (req, res) => {
   });
 };
 
-exports.deleteUser = factory.deleteOne(User);
+// DO NOT update password with this
+exports.updateUser = factory.updateOne(User); // Only for administrators to update user data
+exports.deleteUser = factory.deleteOne(User); // Only for administrators to delete user completely

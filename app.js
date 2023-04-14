@@ -13,6 +13,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // for getting request data in log
 }
 
+console.log(process.env.NODE_ENV);
+
 app.use(express.json()); // bodyParser
 app.use(express.static(`${__dirname}/public`)); // accessing static files like html css images etc.
 

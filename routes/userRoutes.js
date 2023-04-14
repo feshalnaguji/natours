@@ -1,12 +1,17 @@
 const express = require('express');
+const userController = require('./../controllers/userController.js');
+const authController = require('./../controllers/authController.js');
 
 const router = express.Router();
-const userController = require('./../controllers/userController.js');
 
+router.post('/signup', authController.signup);
+
+// Routes in REST format
 router
   .route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser);
+
 router
   .route('/:id')
   .get(userController.getUser)

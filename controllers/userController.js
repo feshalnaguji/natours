@@ -15,6 +15,10 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 // Route handlers for routes
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) create error if user POSTs a password data

@@ -1,12 +1,14 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController.js');
 const authController = require('./../controllers/authController.js');
-const reviewController = require('./../controllers/reviewController.js');
+const reviewRouter = require('./../routes/reviewRoutes.js');
 
 const router = express.Router();
 
 // Param middleware : this will only run if request url contain id as given in middleware
 // router.param('id', tourController.checkID);
+
+router.use('/:tourId/reviews', reviewRouter);
 
 router
   .route('/top-5-cheap')
@@ -32,12 +34,12 @@ router
   );
 
 // Nested Routes
-router
-  .route('/:tourId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
+// router
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
 
 module.exports = router;

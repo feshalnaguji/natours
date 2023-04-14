@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -9,10 +10,20 @@ const userRouter = require('./routes/userRoutes.js');
 const app = express();
 
 console.log(process.env.NODE_ENV);
+// GLOBAL MIDDLEWARES
 // middlewares
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // for getting request data in log
 }
+
+// limiting too many request from same IP => prevent DOS and brute force attacks
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour',
+});
+
+app.use('/api', limiter);
 
 app.use(express.json()); // bodyParser
 app.use(express.static(`${__dirname}/public`)); // accessing static files like html css images etc.

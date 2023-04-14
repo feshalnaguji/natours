@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 // Encrypting user's password before saving it to database
@@ -60,6 +65,13 @@ userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000; // sometimes token created even before passwordChangedAt is created
+  next();
+});
+
+// add this query middleware before any find query, so it'll only find active users
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  this.find({ active: { $ne: false } });
   next();
 });
 

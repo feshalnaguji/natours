@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel.js');
 const catchAsync = require('./../utils/catchAsync.js');
@@ -52,4 +53,43 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
   });
+});
+
+// Implementing protected routes
+exports.protect = catchAsync(async (req, res, next) => {
+  // 1) get the token and check if it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next(
+      new AppError('You are not logged in! Please login to get access.', 401)
+    );
+  }
+  // 2) verification token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET); // promisifying function and it will return decoded payload
+
+  // 3) Check if user still exists
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(
+      new AppError('The user belonging to token no longer exist', 401)
+    );
+  }
+
+  // 4) if user changed password after the JWT is issued
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError('User recently changed password! Please log in again', 401)
+    );
+  }
+
+  // Grant access to protected route
+  req.user = currentUser;
+  next();
 });

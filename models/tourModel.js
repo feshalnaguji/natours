@@ -125,6 +125,7 @@ const tourSchema = new mongoose.Schema(
 // tourSchema.index({ price: 1 }); // Single Index => when we query for only one field
 tourSchema.index({ price: 1, ratingsAverage: -1 }); // Compound Index => when we query for multiple fields or single fields both
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' }); // We need to set index for GeoSpatial data
 
 tourSchema.virtual('durationWeek').get(function () {
   return this.duration / 7;
